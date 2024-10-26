@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-container">
+    <div class="bubble-background"></div>
+
+    <form id="animatedForm">
+        <div class="step active">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="step">
+            <label for="annual_income">Annual Income ($):</label>
+            <input type="number" id="annual_income" name="annual_income" step="0.01" required>
+        </div>
+
+        <div class="step">
+            <label for="current_savings">Current Savings ($):</label>
+            <input type="number" id="current_savings" name="current_savings" step="0.01" required>
+        </div>
+
+        <div class="step">
+            <label for="trs_contribution">TRS Contribution ($ per year):</label>
+            <input type="number" id="trs_contribution" name="trs_contribution" step="0.01" required>
+        </div>
+
+        <div class="step">
+            <label for="b403_contribution">403(b) Contribution ($ per year):</label>
+            <input type="number" id="b403_contribution" name="b403_contribution" step="0.01" required>
+        </div>
+
+        <div class="step">
+            <label for="ira_contribution">IRA Contribution ($ per year):</label>
+            <input type="number" id="ira_contribution" name="ira_contribution" step="0.01" required>
+        </div>
+
+        <div class="step">
+            <label for="monthly_expenses">Monthly Expenses ($):</label>
+            <input type="number" id="monthly_expenses" name="monthly_expenses" step="0.01" required>
+        </div>
+
+        <div class="step">
+            <label for="years_to_retire">Years to Retire:</label>
+            <input type="number" id="years_to_retire" name="years_to_retire" required>
+        </div>
+
+        <div class="buttons">
+            <button type="button" onclick="prevStep()" id="prevBtn" style="display:none;">Back</button>
+            <button type="button" onclick="nextStep()">Next</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
