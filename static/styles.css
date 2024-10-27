@@ -48,8 +48,16 @@ input:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* Tailwind's focus:ring-blue-500 */
 }
+#distributionChart {
+    width: 400px; /* Desired width */
+    height: 400px; /* Desired height */
+    margin: 0 auto;
+}
+
+#investmentChart {
+    width: 500px; /* Desired width for the investment chart */
+    height: 300px; /* Desired height */
+}
+
 
 /* Optional: Additional custom styles */
-.alert {
-    /* Styles for alert messages if needed */
-}

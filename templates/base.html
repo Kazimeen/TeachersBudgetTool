@@ -11,7 +11,7 @@
     <!-- Include Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gradient-to-b from-blue-100 via-blue-200 to-blue-400 min-h-screen flex items-center justify-center">
+<body class="bg-gradient-to-b from-blue-100 via-blue-200 to-blue-400 min-h-screen ">
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Texas Teacher Budget Tool</h1>
         <!-- Flash Messages for Form Validation Errors -->
@@ -35,8 +35,7 @@
         <div class="bubble" style="width: 100px; height: 100px; top: 20%; left: 10%; animation-duration: 12s;"></div>
         <div class="bubble" style="width: 80px; height: 80px; top: 50%; left: 30%; animation-duration: 10s;"></div>
         <div class="bubble" style="width: 120px; height: 120px; top: 70%; left: 60%; animation-duration: 15s;"></div>
-        <div class="bubble" style="width: 60px; height: 60px; top: 30%; left: 80%; animation-duration: 8s;"></div>
-        <div class="bubble" style="width: 90px; height: 90px; top: 80%; left: 20%; animation-duration: 14s;"></div>
+       
     </div>
 
     <!-- JavaScript for Multi-Step Form and Progress Bar -->
@@ -47,85 +46,50 @@
             const prevBtn = document.getElementById("prevBtn");
             const skipBtn = document.getElementById("skipBtn");
             const nextBtn = document.getElementById("nextBtn");
-            const progressBar = document.getElementById("progressBar"); // Progress bar element
+            const progressBar = document.getElementById("progressBar");
 
-            /**
-             * Displays the current step and hides others.
-             * @param {number} stepIndex - The index of the step to display.
-             */
-            function showStep(stepIndex) {
-                console.log(`Showing step: ${stepIndex + 1}`);
-                steps.forEach((step, index) => {
-                    if (index === stepIndex) {
-                        step.classList.remove('hidden', 'opacity-0', 'translate-y-4');
-                        step.classList.add('block', 'animate-fadeIn');
-                    } else {
-                        step.classList.remove('block', 'animate-fadeIn');
-                        step.classList.add('hidden', 'opacity-0', 'translate-y-4');
-                    }
-                });
-                // Toggle the visibility of the "Back" button
-                prevBtn.classList.toggle('hidden', stepIndex === 0);
-                // Update the visibility of "Next" and "Skip" buttons based on input validity
-                toggleNextButton();
-                // Update the progress bar
-                updateProgressBar(stepIndex);
-            }
-
-            /**
-             * Moves to the next step or submits the form if on the last step.
-             */
-            function nextStep() {
+            window.nextStep = function() {
                 if (currentStep < steps.length - 1) {
                     currentStep++;
                     showStep(currentStep);
                 } else {
-                    console.log("Form submitted.");
                     document.getElementById("animatedForm").submit();
                 }
-            }
+            };
 
-            /**
-             * Moves to the previous step.
-             */
-            function prevStep() {
+            window.prevStep = function() {
                 if (currentStep > 0) {
                     currentStep--;
                     showStep(currentStep);
                 }
+            };
+
+            function showStep(stepIndex) {
+                steps.forEach((step, index) => {
+                    step.classList.toggle('hidden', index !== stepIndex);
+                });
+                prevBtn.classList.toggle('hidden', stepIndex === 0);
+                toggleNextButton();
+                updateProgressBar(stepIndex);
             }
 
-            /**
-             * Toggles the visibility of the "Next" and "Skip" buttons based on input validity.
-             */
             function toggleNextButton() {
                 const input = steps[currentStep].querySelector("input");
                 if (input) {
                     const isValid = input.checkValidity();
-                    console.log(`Input valid: ${isValid}`);
                     nextBtn.classList.toggle('hidden', !isValid);
                     skipBtn.classList.toggle('hidden', isValid);
-                } else {
-                    nextBtn.classList.add('hidden');
-                    skipBtn.classList.remove('hidden');
                 }
             }
 
-            /**
-             * Updates the progress bar based on the current step.
-             * @param {number} stepIndex - The current step index.
-             */
             function updateProgressBar(stepIndex) {
                 const totalSteps = steps.length;
                 const progressPercentage = ((stepIndex + 1) / totalSteps) * 100;
                 progressBar.style.width = `${progressPercentage}%`;
-                console.log(`Progress: ${progressPercentage}%`);
             }
 
-            // Expose toggleNextButton globally for inline event handlers in the form
             window.toggleNextButton = toggleNextButton;
 
-            // Initialize form
             showStep(currentStep);
         });
     </script>

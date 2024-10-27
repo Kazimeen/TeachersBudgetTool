@@ -1,18 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Retirement Summary for {{ name }}</h2>
-<p><strong>Estimated Retirement Fund:</strong> ${{ retirement_fund }}</p>
-<p><strong>Required Fund for Retirement:</strong> ${{ required_fund }}</p>
+<h2><strong>Retirement Summary for {{ name | title }}</strong></h2>
+<p><strong>Estimated Retirement Fund:</strong> ${{ retirement_fund | intcomma_decimal }}</p>
+<p><strong>Required Fund for Retirement:</strong> ${{ required_fund | intcomma_decimal }}</p>
 <p><strong>Recommendation:</strong> {{ recommendation }}</p>
 
 <!-- Pie Chart for Fund Distribution -->
-<h3>Fund Distribution</h3>
-<canvas id="distributionChart" width="400" height="400"></canvas>
+<canvas id="distributionChart"></canvas>
 
 <!-- Investment Growth Graph -->
-<h3>Investment Growth Over Time</h3>
-<canvas id="investmentChart" width="600" height="400"></canvas>
+<canvas id="investmentChart"></canvas>
 
 <a href="{{ url_for('index') }}">Back to Home</a>
 
@@ -42,22 +40,35 @@
         };
 
         // Pie Chart Configuration
-        const distributionConfig = {
-            type: 'pie',
-            data: distributionData,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Distribution of Funds'
+const distributionConfig = {
+    type: 'pie',
+    data: distributionData,
+    options: {
+        responsive: false,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    font: {
+                        size: 14 // Adjusts the font size of the legend labels
                     }
                 }
             },
-        };
+            title: {
+                display: true,
+                text: 'Distribution of Funds',
+                font: {
+                    size: 18 // Adjusts the font size of the title text
+                },
+                padding: {
+                    top: 10,
+                    bottom: 20 // Adds space above and below the title for better visibility
+                }
+            }
+        }
+    },
+};
 
         // Render Pie Chart
         const distributionCtx = document.getElementById('distributionChart').getContext('2d');
@@ -82,33 +93,40 @@
             }]
         };
 
-        // Investment Growth Configuration
-        const investmentConfig = {
-            type: 'line',
-            data: investmentData,
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Investment Growth Over Time'
-                    }
+      // Investment Growth Configuration
+const investmentConfig = {
+    type: 'line',
+    data: investmentData,
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Investment Growth Over Time',
+                font: {
+                    size: 18 // Adjust this size as needed
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(value, index, values) {
-                                return '$' + value;
-                            }
-                        }
+                padding: {
+                    top: 10,
+                    bottom: 13 // Adds extra padding around the title for emphasis
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value, index, values) {
+                        return '$' + value;
                     }
                 }
-            },
-        };
+            }
+        }
+    },
+};
 
         // Render Investment Growth Graph
         const investmentCtx = document.getElementById('investmentChart').getContext('2d');

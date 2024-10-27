@@ -6,15 +6,21 @@ from wtforms import StringField, FloatField, IntegerField
 from wtforms.validators import DataRequired, NumberRange
 from flask_wtf.csrf import CSRFProtect
 import os
+import locale
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(basedir, 'database.db')
-
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 # Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your_default_secret_key')  # Replace with a secure key in production
+
+# Define the custom filter for commas with two decimal places
+@app.template_filter('intcomma_decimal')
+def intcomma_decimal(value):
+    return f"{value:,.2f}"
 
 # Initialize Extensions
 db.init_app(app)
@@ -77,9 +83,24 @@ def index():
         retirement_years = 25  # Assume 25 years in retirement
         required_fund = annual_expenses * retirement_years
 
-        recommendation = "You are on track for a secure retirement."
-        if retirement_fund < required_fund:
-            recommendation = "Consider increasing your retirement contributions or extending your working years."
+        # Analyze investment distribution and provide tailored recommendation
+        savings_ratio = current_savings / (current_savings + total_contribution) if (current_savings + total_contribution) > 0 else 0
+        contribution_ratio = total_contribution / (current_savings + total_contribution) if (current_savings + total_contribution) > 0 else 0
+
+        if retirement_fund >= required_fund:
+            if savings_ratio > 0.5:
+                recommendation = "Great job saving! Consider investing more in retirement accounts to maximize tax advantages."
+            elif contribution_ratio > 0.5:
+                recommendation = "You are on track for a secure retirement, with a solid contribution strategy."
+            else:
+                recommendation = "You have a balanced approach, and you are on track for a secure retirement."
+        else:
+            if savings_ratio > 0.7:
+                recommendation = "Consider investing a larger portion in retirement accounts to improve long-term growth potential."
+            elif contribution_ratio > 0.7:
+                recommendation = "You have a strong investment base, but consider saving more to cover unexpected expenses in retirement."
+            else:
+                recommendation = "Consider increasing your retirement contributions or extending your working years to reach a secure retirement."
 
         # Calculate distribution for Pie Chart
         # Categories: TRS, 403(b), IRA, Expenses, Savings
