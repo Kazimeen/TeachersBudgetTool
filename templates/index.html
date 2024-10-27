@@ -4,7 +4,7 @@
 <div class="form-container">
     <div class="bubble-background"></div>
 
-    <form id="animatedForm">
+    <form id="animatedForm" method="POST" action="/submit">
         <div class="step active">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
@@ -51,4 +51,43 @@
         </div>
     </form>
 </div>
+
+<!-- JavaScript for Form Steps -->
+<script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step');
+    const prevBtn = document.getElementById("prevBtn");
+
+    function showStep(stepIndex) {
+        steps.forEach((step, index) => {
+            step.classList.remove('active');
+            if (index === stepIndex) {
+                step.classList.add('active');
+            }
+        });
+
+        // Show or hide the "Back" button based on the step
+        prevBtn.style.display = stepIndex > 0 ? "inline-block" : "none";
+    }
+
+    function nextStep() {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            showStep(currentStep);
+        } else {
+            document.getElementById("animatedForm").submit();
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 0) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        showStep(currentStep);
+    });
+</script>
 {% endblock %}
