@@ -1,93 +1,94 @@
+<!-- templates/index.html -->
 {% extends "base.html" %}
 
 {% block content %}
-<div class="form-container">
-    <div class="bubble-background"></div>
+<div class="relative w-full min-h-screen flex flex-col items-center justify-center">
+    <form id="animatedForm" action="{{ url_for('index') }}" method="POST" class="w-full max-w-lg bg-white bg-opacity-90 p-8 rounded-lg shadow-lg">
+        {{ form.hidden_tag() }}
 
-    <form id="animatedForm" method="POST" action="/submit">
-        <div class="step active">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
+        <!-- Progress Bar Container -->
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
+            <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%;"></div>
         </div>
 
-        <div class="step">
-            <label for="annual_income">Annual Income ($):</label>
-            <input type="number" id="annual_income" name="annual_income" step="0.01" required>
+        <!-- Step 1: Name -->
+        <div class="step hidden opacity-0 translate-y-4">
+            <label for="{{ form.name.id }}" class="block text-xl font-semibold text-gray-700 mb-4 text-center">What is your name?</label>
+            {{ form.name(class="w-full p-4 text-lg border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105", oninput="toggleNextButton()") }}
+            {% if form.name.errors %}
+                <span class="text-red-500 text-sm">{{ form.name.errors[0] }}</span>
+            {% endif %}
         </div>
 
-        <div class="step">
-            <label for="current_savings">Current Savings ($):</label>
-            <input type="number" id="current_savings" name="current_savings" step="0.01" required>
+        <!-- Step 2: Annual Income -->
+        <div class="step hidden opacity-0 translate-y-4">
+            <label for="{{ form.annual_income.id }}" class="block text-xl font-semibold text-gray-700 mb-4 text-center">What is your annual income ($)?</label>
+            {{ form.annual_income(class="w-full p-4 text-lg border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105", oninput="toggleNextButton()") }}
+            {% if form.annual_income.errors %}
+                <span class="text-red-500 text-sm">{{ form.annual_income.errors[0] }}</span>
+            {% endif %}
         </div>
 
-        <div class="step">
-            <label for="trs_contribution">TRS Contribution ($ per year):</label>
-            <input type="number" id="trs_contribution" name="trs_contribution" step="0.01" required>
+        <!-- Step 3: Current Savings -->
+        <div class="step hidden opacity-0 translate-y-4">
+            <label for="{{ form.current_savings.id }}" class="block text-xl font-semibold text-gray-700 mb-4 text-center">What are your current savings ($)?</label>
+            {{ form.current_savings(class="w-full p-4 text-lg border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105", oninput="toggleNextButton()") }}
+            {% if form.current_savings.errors %}
+                <span class="text-red-500 text-sm">{{ form.current_savings.errors[0] }}</span>
+            {% endif %}
         </div>
 
-        <div class="step">
-            <label for="b403_contribution">403(b) Contribution ($ per year):</label>
-            <input type="number" id="b403_contribution" name="b403_contribution" step="0.01" required>
+        <!-- Step 4: TRS Contribution -->
+        <div class="step hidden opacity-0 translate-y-4">
+            <label for="{{ form.trs_contribution.id }}" class="block text-xl font-semibold text-gray-700 mb-4 text-center">What is your TRS Contribution ($)?</label>
+            {{ form.trs_contribution(class="w-full p-4 text-lg border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105", oninput="toggleNextButton()") }}
+            {% if form.trs_contribution.errors %}
+                <span class="text-red-500 text-sm">{{ form.trs_contribution.errors[0] }}</span>
+            {% endif %}
         </div>
 
-        <div class="step">
-            <label for="ira_contribution">IRA Contribution ($ per year):</label>
-            <input type="number" id="ira_contribution" name="ira_contribution" step="0.01" required>
+        <!-- Step 5: 403(b) Contribution -->
+        <div class="step hidden opacity-0 translate-y-4">
+            <label for="{{ form.b403_contribution.id }}" class="block text-xl font-semibold text-gray-700 mb-4 text-center">What is your 403(b) Contribution ($)?</label>
+            {{ form.b403_contribution(class="w-full p-4 text-lg border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105", oninput="toggleNextButton()") }}
+            {% if form.b403_contribution.errors %}
+                <span class="text-red-500 text-sm">{{ form.b403_contribution.errors[0] }}</span>
+            {% endif %}
         </div>
 
-        <div class="step">
-            <label for="monthly_expenses">Monthly Expenses ($):</label>
-            <input type="number" id="monthly_expenses" name="monthly_expenses" step="0.01" required>
+        <!-- Step 6: IRA Contribution -->
+        <div class="step hidden opacity-0 translate-y-4">
+            <label for="{{ form.ira_contribution.id }}" class="block text-xl font-semibold text-gray-700 mb-4 text-center">What is your IRA Contribution ($)?</label>
+            {{ form.ira_contribution(class="w-full p-4 text-lg border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105", oninput="toggleNextButton()") }}
+            {% if form.ira_contribution.errors %}
+                <span class="text-red-500 text-sm">{{ form.ira_contribution.errors[0] }}</span>
+            {% endif %}
         </div>
 
-        <div class="step">
-            <label for="years_to_retire">Years to Retire:</label>
-            <input type="number" id="years_to_retire" name="years_to_retire" required>
+        <!-- Step 7: Monthly Expenses -->
+        <div class="step hidden opacity-0 translate-y-4">
+            <label for="{{ form.monthly_expenses.id }}" class="block text-xl font-semibold text-gray-700 mb-4 text-center">What are your monthly expenses ($)?</label>
+            {{ form.monthly_expenses(class="w-full p-4 text-lg border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105", oninput="toggleNextButton()") }}
+            {% if form.monthly_expenses.errors %}
+                <span class="text-red-500 text-sm">{{ form.monthly_expenses.errors[0] }}</span>
+            {% endif %}
         </div>
 
-        <div class="buttons">
-            <button type="button" onclick="prevStep()" id="prevBtn" style="display:none;">Back</button>
-            <button type="button" onclick="nextStep()">Next</button>
+        <!-- Step 8: Years to Retire -->
+        <div class="step hidden opacity-0 translate-y-4">
+            <label for="{{ form.years_to_retire.id }}" class="block text-xl font-semibold text-gray-700 mb-4 text-center">How many years until you retire?</label>
+            {{ form.years_to_retire(class="w-full p-4 text-lg border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform hover:scale-105", oninput="toggleNextButton()") }}
+            {% if form.years_to_retire.errors %}
+                <span class="text-red-500 text-sm">{{ form.years_to_retire.errors[0] }}</span>
+            {% endif %}
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mt-8">
+            <button type="button" id="prevBtn" onclick="prevStep()" class="hidden px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition">Back</button>
+            <button type="button" id="skipBtn" onclick="nextStep()" class="px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition">Skip</button>
+            <button type="button" id="nextBtn" onclick="nextStep()" class="hidden px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition">Next</button>
         </div>
     </form>
 </div>
-
-<!-- JavaScript for Form Steps -->
-<script>
-    let currentStep = 0;
-    const steps = document.querySelectorAll('.step');
-    const prevBtn = document.getElementById("prevBtn");
-
-    function showStep(stepIndex) {
-        steps.forEach((step, index) => {
-            step.classList.remove('active');
-            if (index === stepIndex) {
-                step.classList.add('active');
-            }
-        });
-
-        // Show or hide the "Back" button based on the step
-        prevBtn.style.display = stepIndex > 0 ? "inline-block" : "none";
-    }
-
-    function nextStep() {
-        if (currentStep < steps.length - 1) {
-            currentStep++;
-            showStep(currentStep);
-        } else {
-            document.getElementById("animatedForm").submit();
-        }
-    }
-
-    function prevStep() {
-        if (currentStep > 0) {
-            currentStep--;
-            showStep(currentStep);
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        showStep(currentStep);
-    });
-</script>
 {% endblock %}

@@ -1,17 +1,133 @@
+<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Texas Teacher Budget Tool</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Tailwind CSS via CDN for simplicity -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
     <!-- Include Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>Texas Teacher Budget Tool</h1>
+<body class="bg-gradient-to-b from-blue-100 via-blue-200 to-blue-400 min-h-screen flex items-center justify-center">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-6">Texas Teacher Budget Tool</h1>
+        <!-- Flash Messages for Form Validation Errors -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="mb-4">
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} p-4 mb-2 rounded bg-red-100 text-red-700">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <!-- Content Block -->
         {% block content %}{% endblock %}
     </div>
+    
+    <!-- Bubble Animation Background -->
+    <div class="bubble-background">
+        <div class="bubble" style="width: 100px; height: 100px; top: 20%; left: 10%; animation-duration: 12s;"></div>
+        <div class="bubble" style="width: 80px; height: 80px; top: 50%; left: 30%; animation-duration: 10s;"></div>
+        <div class="bubble" style="width: 120px; height: 120px; top: 70%; left: 60%; animation-duration: 15s;"></div>
+        <div class="bubble" style="width: 60px; height: 60px; top: 30%; left: 80%; animation-duration: 8s;"></div>
+        <div class="bubble" style="width: 90px; height: 90px; top: 80%; left: 20%; animation-duration: 14s;"></div>
+    </div>
 
+    <!-- JavaScript for Multi-Step Form and Progress Bar -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let currentStep = 0;
+            const steps = document.querySelectorAll('.step');
+            const prevBtn = document.getElementById("prevBtn");
+            const skipBtn = document.getElementById("skipBtn");
+            const nextBtn = document.getElementById("nextBtn");
+            const progressBar = document.getElementById("progressBar"); // Progress bar element
+
+            /**
+             * Displays the current step and hides others.
+             * @param {number} stepIndex - The index of the step to display.
+             */
+            function showStep(stepIndex) {
+                console.log(`Showing step: ${stepIndex + 1}`);
+                steps.forEach((step, index) => {
+                    if (index === stepIndex) {
+                        step.classList.remove('hidden', 'opacity-0', 'translate-y-4');
+                        step.classList.add('block', 'animate-fadeIn');
+                    } else {
+                        step.classList.remove('block', 'animate-fadeIn');
+                        step.classList.add('hidden', 'opacity-0', 'translate-y-4');
+                    }
+                });
+                // Toggle the visibility of the "Back" button
+                prevBtn.classList.toggle('hidden', stepIndex === 0);
+                // Update the visibility of "Next" and "Skip" buttons based on input validity
+                toggleNextButton();
+                // Update the progress bar
+                updateProgressBar(stepIndex);
+            }
+
+            /**
+             * Moves to the next step or submits the form if on the last step.
+             */
+            function nextStep() {
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    showStep(currentStep);
+                } else {
+                    console.log("Form submitted.");
+                    document.getElementById("animatedForm").submit();
+                }
+            }
+
+            /**
+             * Moves to the previous step.
+             */
+            function prevStep() {
+                if (currentStep > 0) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            }
+
+            /**
+             * Toggles the visibility of the "Next" and "Skip" buttons based on input validity.
+             */
+            function toggleNextButton() {
+                const input = steps[currentStep].querySelector("input");
+                if (input) {
+                    const isValid = input.checkValidity();
+                    console.log(`Input valid: ${isValid}`);
+                    nextBtn.classList.toggle('hidden', !isValid);
+                    skipBtn.classList.toggle('hidden', isValid);
+                } else {
+                    nextBtn.classList.add('hidden');
+                    skipBtn.classList.remove('hidden');
+                }
+            }
+
+            /**
+             * Updates the progress bar based on the current step.
+             * @param {number} stepIndex - The current step index.
+             */
+            function updateProgressBar(stepIndex) {
+                const totalSteps = steps.length;
+                const progressPercentage = ((stepIndex + 1) / totalSteps) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+                console.log(`Progress: ${progressPercentage}%`);
+            }
+
+            // Expose toggleNextButton globally for inline event handlers in the form
+            window.toggleNextButton = toggleNextButton;
+
+            // Initialize form
+            showStep(currentStep);
+        });
+    </script>
 </body>
 </html>

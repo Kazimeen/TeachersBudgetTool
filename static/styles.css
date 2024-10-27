@@ -1,49 +1,21 @@
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to bottom, white, #b3e5fc);
-    overflow: hidden;
-}
+/* static/css/styles.css */
 
-.form-container {
-    position: relative;
-    width: 80%;
-    margin: auto;
-    padding: 50px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    text-align: center;
-    overflow: hidden;
-}
-
+/* Bubble Animation Styles */
 .bubble-background {
-    position: absolute;
+    position: fixed;
+    width: 100%;
+    height: 100%;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: transparent;
     overflow: hidden;
     z-index: -1;
 }
 
-.bubble-background::before, .bubble-background::after {
-    content: "";
+.bubble-background .bubble {
     position: absolute;
-    top: -100px;
-    width: 200px;
-    height: 200px;
     background: rgba(179, 229, 252, 0.5);
     border-radius: 50%;
-    animation: float 10s infinite ease-in-out;
-}
-
-.bubble-background::after {
-    top: 200px;
-    left: 300px;
-    width: 150px;
-    height: 150px;
-    animation-duration: 8s;
+    animation: float infinite ease-in-out;
 }
 
 @keyframes float {
@@ -51,44 +23,33 @@ body {
         transform: translateY(0);
     }
     50% {
-        transform: translateY(-50px);
+        transform: translateY(-20px);
     }
 }
 
-.step {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+/* Fade-In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.step.active {
-    display: block;
-    opacity: 1;
+.animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
 }
 
-.buttons {
-    margin-top: 20px;
+/* Optional: Customize input focus styles */
+input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* Tailwind's focus:ring-blue-500 */
 }
 
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #218838;
-}
-
-#prevBtn {
-    background-color: #007bff;
-}
-
-#prevBtn:hover {
-    background-color: #0056b3;
+/* Optional: Additional custom styles */
+.alert {
+    /* Styles for alert messages if needed */
 }
